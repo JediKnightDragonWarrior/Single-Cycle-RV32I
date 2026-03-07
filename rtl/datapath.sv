@@ -2,48 +2,87 @@ module datapath (
     input  logic        clk,
     input  logic        reset,
     
-    // Şimdilik dışarıdan (Kontrol Birimi ve ALU'dan) geldiğini varsaydığımız sinyaller:
-    input  logic        zero,      // ALU'dan gelir: "Sayılar eşit mi?"
-    input  logic        branch,    // Kontrol Biriminden gelir: "Bu bir BEQ komutu mu?"
-    input  logic        jump,      // Kontrol Biriminden gelir: "Bu bir JAL komutu mu?"
-    input  logic [31:0] immext,    // SignExtend modülünden gelir: Uzatılmış sayı
+    // --- DIŞARIYLA (HAFIZA) OLAN BAĞLANTILAR ---
+    output logic [31:0] pc,            // Program Counter çıkışı (IMEM 'A' girişine gider)
+    input  logic [31:0] instr,         // Komut (IMEM 'RD' çıkışından gelir)
+    output logic [31:0] aluout,        // ALU hesaplama sonucu (DMEM 'A' Adres girişine gider)
+    output logic [31:0] writedata,     // Veri hafızasına yazılacak değer (DMEM 'WD' girişine gider)
+    input  logic [31:0] readdata,      // Veri hafızasından okunan değer (DMEM 'RD' çıkışından gelir)
     
-    // Instruction Memory'e (Komut Hafızasına) gidecek olan adres çıkışı:
-    output logic [31:0] pc         
+    // --- KONTROL BİRİMİ İLE OLAN BAĞLANTILAR ---
+    input  logic        pcsrc,         // PC Seçici (0: PC+4, 1: PCTarget)
+    input  logic        resultsrc,     // Result MUX Seçici (0: ALUResult, 1: ReadData)
+    input  logic        alusrc,        // ALU MUX Seçici (0: rs2, 1: ImmExt)
+    input  logic [1:0]  immsrc,        // Sayı Uzatıcı Tipi 
+    input  logic        regwrite,      // Register File yazma izni (WE3)
+    input  logic [2:0]  alucontrol,    // ALU işlem kontrolü
+    output logic        zero           // ALU'nun Zero bayrağı (Control Unit'e geri gider)
 );
 
-    // --- İÇ KABLOLAR (WIRES) ---
-    logic [31:0] pc_next;
-    logic [31:0] pc_plus_4;
-    logic [31:0] pc_target;
-    logic        pc_src;
+    // --- İÇ KABLOLAR ---
+    logic [31:0] pc_next, pc_plus_4, pc_target;
+    logic [31:0] immext;
+    logic [31:0] srca, srcb;     
+    logic [31:0] result;         
 
-    // --- 1. PC YAZMACI (HAFIZA) ---
-    // Daha önce yazdığımız pc_reg modülünü buraya çağırıp kablolarını bağlıyoruz.
+    // ------------------------------------------
+    // 1. PC ve Adres Hesaplamaları (Sol Kısım)
+    // ------------------------------------------
     pc_reg pcreg_inst (
         .clk(clk),
         .reset(reset),
-        .pc_next(pc_next), // Aşağıda hesapladığımız değeri PC'nin girişine veriyoruz
-        .pc(pc)            // PC'nin içinden çıkan güncel adresi alıyoruz
+        .pc_next(pc_next),
+        .pc(pc)
     );
 
-    // --- 2. HESAPLAYICILAR (ADDERS) ---
-    // Standart ilerleme: Her komut 4 byte olduğu için PC sürekli 4 artar
+    // Şemadaki alttaki toplayıcı (PCPlus4)
     assign pc_plus_4 = pc + 32'd4;
-
-    // Atlama/Dallanma hedefi: Anlık adres ile uzatılmış sayıyı (offset) topla
+    
+    // Şemadaki sağ ortadaki toplayıcı (PCTarget)
     assign pc_target = pc + immext;
 
-    // --- 3. KARAR VE YÖNLENDİRME (MUX) ---
-    // Eğer (Jump ise) VEYA (Branch komutuysa VE ALU "eşit" dediyse) pc_src 1 olur.
-    assign pc_src = jump | (branch & zero);
+    // Şemadaki en soldaki PC MUX
+    assign pc_next = pcsrc ? pc_target : pc_plus_4; 
 
-    // MUX: pc_src 1 ise hedefe atla, 0 ise 4 fazlasına normal devam et.
-    assign pc_next = pc_src ? pc_target : pc_plus_4;
 
-    // İLERİDE BURAYA NELER EKLENECEK?
-    // - ALU modülünü buraya çağıracağız
-    // - Register File modülünü buraya çağıracağız
-    // - Sign Extend modülünü buraya çağıracağız ve aralarındaki kabloları bağlayacağız.
+    // ------------------------------------------
+    // 2. Modüller ve Veri Yolu Ağı (Sağ Kısım)
+    // ------------------------------------------
+    
+    // Extend (İşaret Uzatıcı)
+    signextend signext_inst (
+        .instr(instr),           // Aslında şemadaki gibi [31:7] gönderilebilir ama modül içinden kırpıldı
+        .immsrc(immsrc),
+        .immext(immext)
+    );
+
+    // Register File
+    regfile rf_inst (
+        .clk(clk),
+        .we3(regwrite),
+        .a1(instr[19:15]),
+        .a2(instr[24:20]),
+        .a3(instr[11:7]),
+        .wd3(result),            // En sağdaki MUX'tan dönen Result kablosu
+        .rd1(srca),              // Şemadaki SrcA kablosu
+        .rd2(writedata)          // Şemadaki WriteData kablosu
+    );
+
+    // ALU MUX (Şemadaki ortadaki MUX)
+    // 0: RD2 (writedata), 1: ImmExt
+    assign srcb = alusrc ? immext : writedata;
+
+    // ALU
+    alu alu_inst (
+        .a(srca),
+        .b(srcb),
+        .alucontrol(alucontrol),
+        .result(aluout),         // Şemadaki ALUResult kablosu
+        .zero(zero)              // Şemadaki Zero (Control Unit'e giden kablo)
+    );
+
+    // Result MUX (Şemadaki en sağdaki MUX)
+    // 0: ALUResult, 1: ReadData
+    assign result = resultsrc ? readdata : aluout;
 
 endmodule
