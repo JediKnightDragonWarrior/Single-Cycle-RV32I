@@ -82,7 +82,14 @@ module datapath (
     );
 
     // Result MUX (Şemadaki en sağdaki MUX)
-    // 0: ALUResult, 1: ReadData
-    assign result = resultsrc ? readdata : aluout;
+    // 00: ALUResult, 01: ReadData, 10: pc_plus_4 
+    always_comb begin
+        case(resultsrc)
+            2'b00: result = aluout;
+            2'b01: result = readdata;
+            2'b10: result = pc_plus_4;
+            default: result = 32'b0;
+        endcase
+    end 
 
 endmodule
