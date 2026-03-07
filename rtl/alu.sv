@@ -14,7 +14,18 @@ module alu (
             3'b010: result = a & b;                           // AND
             3'b011: result = a | b;                           // OR
             3'b100: result = a ^ b;                           // XOR
-            3'b101: result = ($signed(a) < $signed(b)) ? 32'd1 : 32'd0; // SLT (Signed Less Than)
+            3'b101: begin 
+                // SLT (Signed Less Than - İşaretli Küçüktür) Arka Plan Mantığı:
+                // 1. Durum: İşaretler (MSB, 31. bitler) farklıysa: Negatif olan sayı her zaman daha küçüktür. 
+                //           Yani 'a' negatif (1) ise sonuç 1 olur.
+                // 2. Durum: İşaretler aynıysa: (a - b) işlemi yapılır. Taşma (overflow) ihtimali olmadığı için 
+                //           çıkan sonucun 31. bitine (işaretine) bakılır. Eğer sonuç negatifse(1) 'a < b' doğrudur.
+                if (a[31] != b[31]) begin
+                    result = a[31] ? 32'd1 : 32'd0;
+                end else begin
+                    result = (a - b)[31] ? 32'd1 : 32'd0;
+                end
+            end
             3'b110: result = (a < b) ? 32'd1 : 32'd0;                   // SLTU (Unsigned Less Than)
             default: result = 32'b0;                          // Güvenlik için default durum
         endcase
