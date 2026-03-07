@@ -1,25 +1,50 @@
 module aludec(
+    // first three inputs are instruction info
     input  logic       opb5,
     input  logic [2:0] funct3,
     input  logic       funct7b5,
-    input  logic [1:0] ALUOp,
-    output logic [2:0] ALUControl
+
+    input  logic [1:0] ALUOp,       // category of alu operation
+    output logic [2:0] ALUControl   // specific operation of alu 
 );
 
-logic RtypeSub;
-assign RtypeSub = funct7b5 & opb5; // TRUE for R-type subtract
+/** 
+ALUOp table 
+    00  :   lw,sw,jal
+    01  :   beq
+    10  :   aritmetic logic operations (R,I)
+    11  :
+
+ALUControl table
+    000 :   addition
+    001 :   subtraction
+    010 :   and
+    011 :   or
+    100 :   xor
+    101 :   slt
+    110 :   
+    111 :   
+**/
+
 
 always_comb
     case (ALUOp)
-        2'b00: ALUControl = 3'b000; // addition
-        2'b01: ALUControl = 3'b001; // subtraction
-        default: case (funct3) // R-type or I-type ALU
-            3'b000: if (RtypeSub)
-                        ALUControl = 3'b001; // sub
-                    else
-                        ALUControl = 3'b000; // add
-            // (rest of the case statements are cut off in the image)
-        endcase
+        2'b00:                          ALUControl = 3'b000;             // lw,sw,jal    ->  addition
+        2'b01:                          ALUControl = 3'b001;             // beq      ->  subtraction
+        2'b10: 
+            case (funct3) // R-type or I-type ALU
+                3'b000: 
+                    if      (opb5)      ALUControl = 3'b000; // addi   -> addition
+                    else if (funct7b5)  ALUControl = 3'b001; // sub    -> subtraction
+                    else                ALUControl = 3'b000; // add    -> addition
+                3'b001:                 ALUControl = 3'b000; // sll/srl (not implemented, default to add)
+                3'b010:                 ALUControl = 3'b101; // slt     -> signed comparison
+                3'b100:                 ALUControl = 3'b100; // xor     -> xor                   
+                3'b110:                 ALUControl = 3'b011; // or      -> or  
+                3'b111:                 ALUControl = 3'b010; // and     -> and  
+                default: ALUControl = 3'b000;  
+            endcase
+        default:                        ALUControl = 3'b000;       
     endcase
 
 endmodule

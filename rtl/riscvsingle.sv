@@ -1,14 +1,23 @@
-module riscvsingle(input  logic        clk, reset,
-                   input  logic [31:0] Instr,
-                   input  logic [31:0] ReadData,
-                   output logic [31:0] PC,
-                   output logic        MemWrite,
-                   output logic [31:0] ALUResult, WriteData
-);
+module riscvsingle
+//    connects two parts of processor [controller] + [datapath] => processor
+(
+    input  logic        clk, reset,
+    input  logic [31:0] Instr,      //  IntructionMemory[PC]
+    input  logic [31:0] ReadData,   
 
-  logic        PCSrc, ALUSrc, RegWrite, Zero;
-  logic [1:0]  ResultSrc, ImmSrc;
-  logic [2:0]  ALUControl;
+    output logic [31:0] PC,
+    output logic        MemWrite,    //  enables write to data memory 
+    output logic [31:0] ALUResult,
+    output logic [31:0] WriteData
+);
+    // signals between controller and datapath
+    logic         PCSrc;
+    logic [1:0]   ResultSrc;
+    logic [2:0]   ALUControl;
+    logic         ALUSrc;               //  decides "srcB" (second operand of alu) [0:rd2 , 1:Immediate]             
+    logic [1:0]   ImmSrc;
+    logic         RegWrite;             
+    logic         Zero;                  
 
     controller c (
         .op(Instr[6:0]),
