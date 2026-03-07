@@ -37,7 +37,6 @@ always_comb
                     if      (opb5)      ALUControl = 3'b000; // addi   -> addition
                     else if (funct7b5)  ALUControl = 3'b001; // sub    -> subtraction
                     else                ALUControl = 3'b000; // add    -> addition
-                3'b001:                 ALUControl = 3'b000; // sll/srl (not implemented, default to add)
                 3'b010:                 ALUControl = 3'b101; // slt     -> signed comparison
                 3'b100:                 ALUControl = 3'b100; // xor     -> xor                   
                 3'b110:                 ALUControl = 3'b011; // or      -> or  
