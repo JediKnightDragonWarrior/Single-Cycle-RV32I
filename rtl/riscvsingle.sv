@@ -27,18 +27,18 @@ module riscvsingle(input  logic        clk, reset,
     datapath d (
         .clk(clk),
         .reset(reset),
-        .pc(PC),
-        .instr(Instr),
-        .aluout(ALUResult),
-        .writedata(WriteData),
-        .readdata(ReadData),
-        .pcsrc(PCSrc),
-        .resultsrc(ResultSrc),
-        .alusrc(ALUSrc),
-        .immsrc(ImmSrc),
-        .regwrite(RegWrite),
-        .alucontrol(ALUControl),
-        .zero(Zero)
+        .PC(PC),
+        .Instr(Instr),
+        .ALUResult(ALUResult),
+        .WriteData(WriteData),
+        .ReadData(ReadData),
+        .PCSrc(PCSrc),
+        .ResultSrc(ResultSrc),
+        .ALUSrc(ALUSrc),
+        .ImmSrc(ImmSrc),
+        .RegWrite(RegWrite),
+        .ALUControl(ALUControl),
+        .Zero(Zero)
     );
 
 endmodule
