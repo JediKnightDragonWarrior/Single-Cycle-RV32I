@@ -5,8 +5,8 @@ module regfile
     input  logic        clk,   
     input  logic        WE3,   // write enable (not active at sw ,beq) 
 
-    // rd1 <= RegFile[rd1]
-    // rd2 <= RegFile[rd2]
+    // rd1 <= RegFile[a1]
+    // rd2 <= RegFile[a2]
     // RegFile[a3] <= wd3
 
     input  logic [4:0]  A1,    

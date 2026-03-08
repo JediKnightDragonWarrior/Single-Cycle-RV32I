@@ -13,7 +13,7 @@ module maindec
   output logic [1:0] ALUOp,            // to aludec                     
   output logic [1:0] ResultSrc,       
   output logic       ALUSrc,          // rd2 or imm         
-  output logic [1:0] ImmSrc,  
+  output logic [2:0] ImmSrc,  
   output logic       Branch, 
   output logic       Jump, 
   output logic       MemWrite,    

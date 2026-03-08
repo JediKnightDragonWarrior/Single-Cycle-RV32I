@@ -15,7 +15,7 @@ module controller
     output logic       PCSrc,           
     output logic       ALUSrc,          
     output logic       RegWrite,        
-    output logic [1:0] ImmSrc,          
+    output logic [2:0] ImmSrc,          
     output logic [2:0] ALUControl       
 );
 

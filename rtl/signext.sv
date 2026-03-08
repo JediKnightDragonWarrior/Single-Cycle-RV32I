@@ -1,7 +1,7 @@
 module signextend 
 //  extends immediate values in instruction to 32-bit (why ? : alu uses 32 bits operands)
 (
-    input  logic [31:0] Instr,   // from IntrMEM[PC] 
+    input  logic [31:7] Instr,   // from IntrMEM[PC] 
     input  logic [2:0]  ImmSrc,  
     output logic [31:0] ImmExt   // goes to srcB if ALUSrc == 1 (if instruction uses immediate in alu) 
 );
