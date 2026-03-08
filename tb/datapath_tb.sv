@@ -51,7 +51,7 @@ module datapath_tb();
         $display("=== Datapath Testbench ===\n");
         
         // Initialize signals
-        reset       <= 1;
+        reset       <= '1;
         Instr       <= '0;
         ReadData    <= '0;
         PCSrc       <= '0;
@@ -61,8 +61,8 @@ module datapath_tb();
         RegWrite    <= '0;
         ALUControl  <= '0;
         #10;
-        reset <= 0;
-        #10;
+        reset <= '0;
+        #1;
 
         // Test 1: addi x5, x0, 5 (I-Type)
         // opcode = 0010011 , funct3 = 000
@@ -81,7 +81,7 @@ module datapath_tb();
         $display("  ALUResult:  %d", ALUResult);
         $display("  Zero:       %b", Zero);
         $display("  WriteData:  %d\n", WriteData);
-        #1    
+        #1;    
         
         // Test 2: addi x7, x0, 7 (I-Type)
         // opcode = 0010011 , funct3 = 000
@@ -164,8 +164,8 @@ module datapath_tb();
 
         // Test 6: jal x1, offset (J-Type)
         // opcode = 1101111
-        //  rd = pc+4 ; pc += imm ( 44 + 8 = 52 )
-        Instr       <= 32'b00000000100000000000_00001_1101111;  // jal x1, 64
+        //  rd = pc+4 ; pc += imm ( +12 )
+        Instr       <= 32'b00000000110000000000_00001_1101111;  // jal x1, 64
         PCSrc       <= 1'b1;
         ResultSrc   <= 2'b10;
         ALUSrc      <= 1'bx;
