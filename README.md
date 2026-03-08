@@ -69,18 +69,18 @@ The project includes a comprehensive SystemVerilog testbench (`riscvsingle_tb.sv
 
 **Prerequisites:** [Icarus Verilog](http://iverilog.icarus.com/) (`iverilog`).
 
-To run the testbench and see the output trace:
+To make testing easier, a **Makefile** is included. You can use the following commands:
 
 ```bash
-# Compile the design and the testbench
-iverilog -g2012 -o tb.vvp rtl/*.sv tb/riscvsingle_tb.sv
+# Compile and run the simulation only
+make run
 
-# Run the simulation
-vvp tb.vvp
+# Compile, run, and automatically open GTKWave to view waveforms
+make wave
+
+# Clean up generated files (simv, wave.vcd)
+make clean
 ```
 
-You can view the resulting `wave.vcd` file in GTKWave to analyze all inner signals cycle-by-cycle!
-
----
 
 _🎓 Designed for hardware architecture studies and FPGA exploration._
