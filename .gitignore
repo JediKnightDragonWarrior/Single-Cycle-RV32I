@@ -3,7 +3,7 @@
 *.out
 *_sim
 *.vvp
-./simv
+simv
 
 # İşletim sistemi kalıntıları
 .DS_Store
