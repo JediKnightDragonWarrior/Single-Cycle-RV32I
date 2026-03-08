@@ -1,10 +1,10 @@
 module aludec(
     // first three inputs are instruction info
+    input  logic [1:0] ALUOp,       // category of alu operation
     input  logic       opb5,
     input  logic [2:0] funct3,
     input  logic       funct7b5,
 
-    input  logic [1:0] ALUOp,       // category of alu operation
     output logic [2:0] ALUControl   // specific operation of alu 
 );
 
@@ -41,9 +41,9 @@ always_comb
                 3'b100:                 ALUControl = 3'b100; // xor     -> xor                   
                 3'b110:                 ALUControl = 3'b011; // or      -> or  
                 3'b111:                 ALUControl = 3'b010; // and     -> and  
-                default: ALUControl = 3'b000;  
+                default:                ALUControl = 32'bx;  
             endcase
-        default:                        ALUControl = 3'b000;       
+        default:                        ALUControl = 32'bx;       
     endcase
 
 endmodule

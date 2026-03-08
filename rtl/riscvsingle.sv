@@ -15,7 +15,7 @@ module riscvsingle
     logic [1:0]   ResultSrc;
     logic [2:0]   ALUControl;
     logic         ALUSrc;               //  decides "srcB" (second operand of alu) [0:rd2 , 1:Immediate]             
-    logic [1:0]   ImmSrc;
+    logic [2:0]   ImmSrc;
     logic         RegWrite;             
     logic         Zero;                  
 

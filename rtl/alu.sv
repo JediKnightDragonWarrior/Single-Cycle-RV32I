@@ -15,7 +15,7 @@ module alu (
             3'b011: ALUResult = SrcA | SrcB;                                    //  OR
             3'b100: ALUResult = SrcA ^ SrcB;                                    //  XOR
             3'b101: ALUResult = ($signed(SrcA) < $signed(SrcB)) ? 32'd1 : 32'd0;      //  SLT                                                 //  SLT
-            default: ALUResult = 32'b0;                          
+            default: ALUResult = 'x;                          
         endcase
     end
 

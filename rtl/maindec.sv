@@ -20,20 +20,20 @@ module maindec
   output logic       RegWrite
 );
 
-  logic [10:0] controls;
+  logic [11:0] controls;
 
   assign {RegWrite, ImmSrc, ALUSrc, MemWrite,ResultSrc, Branch, ALUOp, Jump} = controls;
 
   always_comb
     case(op)
       // RegWrite_ImmSrc_ALUSrc_MemWrite_ResultSrc_Branch_ALUOp_Jump
-      7'b0000011: controls = 11'b1_00_1_0_01_0_00_0;  // lw (I-Type) ! not same opcode with other I-Types
-      7'b0100011: controls = 11'b0_01_1_1_00_0_00_0;  // sw (S-Type)
-      7'b0110011: controls = 11'b1_xx_0_0_00_0_10_0;  // R-type
-      7'b1100011: controls = 11'b0_10_0_0_00_1_01_0;  // beq (B-Type)
-      7'b0010011: controls = 11'b1_00_1_0_00_0_10_0;  // I-type 
-      7'b1101111: controls = 11'b1_11_0_0_10_0_00_1;  // jal (J-Type)
-      default:    controls = 11'bx_xx_x_x_xx_x_xx_x; 
+      7'b0000011: controls = 12'b1_000_1_0_01_0_00_0;  // lw (I-Type) ! not same opcode with other I-Types
+      7'b0100011: controls = 12'b0_001_1_1_00_0_00_0;  // sw (S-Type)
+      7'b0110011: controls = 12'b1_xxx_0_0_00_0_10_0;  // R-type
+      7'b1100011: controls = 12'b0_010_0_0_xx_1_01_0;  // beq (B-Type)
+      7'b0010011: controls = 12'b1_000_1_0_00_0_10_0;  // I-type 
+      7'b1101111: controls = 12'b1_011_x_0_10_0_xx_1;  // jal (J-Type)
+      default:    controls = 'x; 
     endcase
 
 endmodule

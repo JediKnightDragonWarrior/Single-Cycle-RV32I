@@ -43,7 +43,7 @@ module datapath
     pc_reg pc(
         .clk(clk),
         .reset(reset),
-        .pc_next(PCNext),
+        .PCNext(PCNext),
         .pc(PC)
     );
 
@@ -85,10 +85,10 @@ module datapath
     // Result MUX 
     always_comb 
         case(ResultSrc)
-            2'b00: Result = ALUResult;
-            2'b01: Result = ReadData;
-            2'b10: Result = PCPlus4;
-            default: Result = 32'b0;
+            2'b00:      Result = ALUResult;
+            2'b01:      Result = ReadData;
+            2'b10:      Result = PCPlus4;
+            default:    Result = '0;
         endcase
 
 endmodule

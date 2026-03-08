@@ -1,6 +1,6 @@
 # files
-RTL = rtl/regfile.sv
-TB  = tb/regfile_tb.sv
+RTL = rtl/*.sv
+TB  = tb/controller_tb.sv
 
 # output files
 OUT = simv

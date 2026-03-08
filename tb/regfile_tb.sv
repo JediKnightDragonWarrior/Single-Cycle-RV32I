@@ -11,13 +11,13 @@ module regfile_tb();
     // Instantiate the regfile module
     regfile dut (
         .clk(clk),
-        .we3(we3),
-        .a1(a1),
-        .a2(a2),
-        .a3(a3),
-        .wd3(wd3),
-        .rd1(rd1),
-        .rd2(rd2)
+        .WE3(we3),
+        .A1(a1),
+        .A2(a2),
+        .A3(a3),
+        .WD3(wd3),
+        .RD1(rd1),
+        .RD2(rd2)
     );
     
     // Clock generation
