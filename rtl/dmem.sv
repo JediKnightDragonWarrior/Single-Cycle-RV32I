@@ -18,13 +18,12 @@ module dmem
     logic [1:0] bit_type;      // lb:00 , lh:01 , lw:10
     assign bit_type = 2'b10;   // only lw supported yet
 
-    logic [31:0] word;
-    assign word = RAM[A[31:2]];
-
     // 4KB RAM , 2^12 bytes
     // word aligned addressing 
     logic [31:0] RAM [2**10-1:0];    
-//    assign word = RAM[A[31:2]]; initializin RAM to 0 state
+
+    logic [31:0] word;
+    assign word = RAM[A[31:2]];
 
 
 
