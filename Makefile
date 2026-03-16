@@ -1,6 +1,6 @@
 # files
 RTL = rtl/*.sv
-TB  = tb/top_tb.sv
+TB  = tb/alu_tb.sv
 
 # output files
 OUT = simv
