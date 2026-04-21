@@ -1,20 +1,20 @@
 module barrel_shifter (
     input  logic [1:0]  mode,
     input  logic [4:0]  shamt, 
-    input  logic [31:0] Src,       //  operand1 always comes from rs1
-    output logic [31:0] Result
+    input  logic [31:0] src,       //  operand1 always comes from rs1
+    output logic [31:0] result
 );
 
     logic           fill_bit;
     logic   [31:0]  reverse_in,reverse_out;
     logic   [31:0]  ready,s0,s1,s2,s3,s4;
 
-    assign fill_bit = (mode == 2'b00) ? Src[31] : 1'b0;
-    assign ready    = (mode == 2'b10) ? reverse_in : Src;
-    assign Result   = (mode == 2'b10) ? reverse_out : s4;
+    assign fill_bit = (mode == 2'b00) ? src[31] : 1'b0;
+    assign ready    = (mode == 2'b10) ? reverse_in : src;
+    assign result   = (mode == 2'b10) ? reverse_out : s4;
     
     always_comb begin
-        for (int i = 0; i < 32; i++) reverse_in[i] = Src[31-i]; 
+        for (int i = 0; i < 32; i++) reverse_in[i] = src[31-i]; 
     end
 
     always_comb begin

@@ -1,0 +1,39 @@
+`include "definitions.svh"
+
+module decoder_type_b (
+	input  logic [31:0] instr,
+	output logic [31:0] imm,
+	output logic [3:0]  alu_op);
+
+	logic [2:0] funct3;
+	logic [6:0] funct7;
+
+	assign imm = {{20{instr[31]}}, instr[31:20]};
+
+	always_comb begin
+		funct3 = instr[14:12];
+		funct7 = instr[31:25];
+
+		alu_op = ALU_INV;
+
+		case (funct3)
+			3'b000: alu_op = ALU_ADD;
+			3'b010: alu_op = ALU_SLT;
+			3'b011: alu_op = ALU_SLTU;
+			3'b100: alu_op = ALU_XOR;
+			3'b110: alu_op = ALU_OR;
+			3'b111: alu_op = ALU_AND;
+			3'b001: begin
+				if (funct7 == 7'b0000000)
+					alu_op = ALU_SLL;
+			end
+			3'b101: begin
+				if (funct7 == 7'b0000000)
+					alu_op = ALU_SRL;
+				else if (funct7 == 7'b0100000)
+					alu_op = ALU_SRA;
+			end
+		endcase
+	end
+
+endmodule

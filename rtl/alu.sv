@@ -1,47 +1,48 @@
-module alu (
-    input  logic [3:0]  ALUControl, //  specific operation of alu    
-    input  logic [31:0] SrcA,       //  operand1 always comes from rs1
-    input  logic [31:0] SrcB,       //  operand2 from rs2 or Imm   
+`include "definitions.svh"
 
-    output logic [31:0] ALUResult,     
-    output logic        Zero        //  if ALUResult is zero , used for beq            
+module alu (
+    input  logic [3:0]  alu_op,         
+    input  logic [1:0]  alu_src,        
+    input  logic [31:0] rs1,        
+    input  logic [31:0] rs2,           
+    input  logic [31:0] imm,           
+    output logic [31:0] alu_result    
 );
     
-    assign Zero = (ALUResult == 32'b0);
-
     always_comb begin
-        case (ALUControl)
-            4'b0000: ALUResult = SrcA + SrcB;                                       //  ADD
-            4'b0001: ALUResult = SrcA - SrcB;                                       //  SUB
-            4'b0010: ALUResult = SrcA & SrcB;                                       //  AND
-            4'b0011: ALUResult = SrcA | SrcB;                                       //  OR
-            4'b0100: ALUResult = SrcA ^ SrcB;                                       //  XOR
-            4'b0101: ALUResult = ($signed(SrcA) < $signed(SrcB)) ? 32'd1 : 32'd0;   //  slt                                                 
-            4'b0110: ALUResult = shift_out;                                         //  sll                                                 
-            4'b0111: ALUResult = shift_out;                                         //  srl                                                 
-            4'b1000: ALUResult = shift_out;                                         //  sra                                                 
-            default: ALUResult = 'x;                                                //  none
+        case (alu_op)
+            ALU_ADD:    alu_result = rs1 + rs2;                                       
+            ALU_SUB:    alu_result = rs1 - rs2;                                       
+            ALU_SLL:    alu_result = shifter_out;                                                                                          
+            ALU_SLT:    alu_result = ($signed(rs1) < $signed(rs2)) ? 32'd1 : 32'd0;                                                    
+            ALU_SLTU:   alu_result = rs1 < rs2;                                                                                        
+            ALU_XOR:    alu_result = rs1 ^ rs2;                                       
+            ALU_SRL:    alu_result = shifter_out;                                                                                          
+            ALU_SRA:    alu_result = shifter_out;                                                                                          
+            ALU_OR:     alu_result = rs1 | rs2;                                       
+            ALU_AND:    alu_result = rs1 & rs2;                                       
+            default:    alu_result = 'x;                                                
         endcase
     end
 
+    logic   [1:0]   mode;
     logic   [1:0]   shamt;
-    logic   [31:0]  shift_out;
+    logic   [31:0]  shifter_out;
 
+    always_comb begin
+        case (alu_op)
+            ALU_SLL:    mode = 2'd2;                                                                                          
+            ALU_SRL:    mode = 2'd1;                                                                                          
+            ALU_SRA:    mode = 2'd0;                                                                                          
+            default:    mode = 'x;                                                
+        endcase
+    end
 
     barrel_shifter sh(
-        .mode(ALUControl[1:0]),
-        .shamt(SrcB[4:0]),
-        .Src(SrcA),
-        .Result(shift_out)
+        .mode(mode),
+        .shamt(rs2[4:0]),
+        .src(rs1),
+        .result(shifter_out)
     );
-
-
-
-
-
-
-
-    
-
 
 endmodule

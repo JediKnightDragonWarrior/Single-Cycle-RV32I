@@ -1,10 +1,9 @@
-# Icarus Verilog çıktıları
+.idea
 *.vcd
 *.out
 *_sim
 *.vvp
 simv
 
-# İşletim sistemi kalıntıları
 .DS_Store
 *~
