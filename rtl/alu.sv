@@ -2,10 +2,8 @@
 
 module alu (
     input  logic [3:0]  alu_op,         
-    input  logic [1:0]  alu_src,        
     input  logic [31:0] rs1,        
     input  logic [31:0] rs2,           
-    input  logic [31:0] imm,           
     output logic [31:0] alu_result    
 );
     

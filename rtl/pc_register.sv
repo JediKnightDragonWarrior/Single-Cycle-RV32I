@@ -7,7 +7,7 @@ module pc_register (
 
     always_ff @(posedge clk or posedge reset) begin
         if (reset)  pc <= 32'd0;    
-        else        pc <= PCNext;    
+        else        pc <= pc_next;    
     end
         
 endmodule

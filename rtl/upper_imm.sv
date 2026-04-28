@@ -12,12 +12,14 @@ module upper_imm
     logic [31:0] shifted_imm;    
     assign shifted_imm = (imm << 12);
 
+    always_comb begin
+    
+        case (u_op)
+            U_LUI:      upper_imm_result = shifted_imm;
+            U_AUIPC:    upper_imm_result = pc + shifted_imm;
+            default:    upper_imm_result = 32'd0;
+        endcase
 
-    case (u_op)
-        U_LUI:      upper_imm_result = shifted_imm;
-        U_AUIPC:    upper_imm_result = pc + shifted_imm;
-        default:
-    endcase
-
+    end
 
 endmodule

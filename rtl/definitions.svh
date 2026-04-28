@@ -44,7 +44,8 @@ localparam logic [3:0] LOAD_LHU = 4'd4;
 localparam logic [3:0] STORE_SB  = 4'd5;
 localparam logic [3:0] STORE_SH  = 4'd6;
 localparam logic [3:0] STORE_SW  = 4'd7;
-localparam logic [3:0] LOAD_INV = 4'd15;
+localparam logic [3:0] LOAD_INV  = 4'd15;
+localparam logic [3:0] STORE_INV = 4'd15;
 
 // Branch operation codes (B-type)
 localparam logic [3:0] BRANCH_BEQ  = 4'd0;

@@ -1,4 +1,4 @@
-`include "decoder_common_defs.svh"
+`include "definitions.svh"
 
 // PC Control Unit
 // Computes the next program counter value based on branch conditions and jump operations.

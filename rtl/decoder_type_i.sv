@@ -1,6 +1,6 @@
 `include "definitions.svh"
 
-module decoder_type_b (
+module decoder_type_i (
 	input  logic [31:0] instr,
 	output logic [31:0] imm,
 	output logic [3:0]  alu_op);

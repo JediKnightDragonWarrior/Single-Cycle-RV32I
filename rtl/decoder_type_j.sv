@@ -1,6 +1,6 @@
 `include "definitions.svh"
 
-module j_type_decoder (
+module decoder_type_j (
 	input  logic [31:0] instr,
 	output logic [31:0] imm,
 	output logic [3:0]  jump_op);

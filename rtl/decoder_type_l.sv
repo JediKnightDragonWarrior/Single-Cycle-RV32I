@@ -3,7 +3,8 @@
 module decoder_type_l (
 	input  logic [31:0] instr,
 	output logic [31:0] imm,
-	output logic [3:0]  load_op);
+	output logic [3:0]  load_op,
+	output logic [31:0] address);
 
 	logic [2:0] funct3;
 	assign funct3 = instr[14:12];
@@ -12,6 +13,7 @@ module decoder_type_l (
 
 	always_comb begin
 		load_op = LOAD_INV;
+		address  = instr[19:15] + imm;
 
 		case (funct3)
 			3'd0:	 load_op = LOAD_LB;
@@ -21,6 +23,7 @@ module decoder_type_l (
 			3'd5:	 load_op = LOAD_LHU;
 			default: load_op = LOAD_INV;
 		endcase
+	
 	end
 
 endmodule
