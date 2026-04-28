@@ -36,8 +36,6 @@ module processor (
         .branch_op(branch_op),
         .u_op(u_op),
         .jump_op(jump_op),
-        .l_address(), // Unused, memory address comes from alu_result
-        .s_address(), // Unused, memory address comes from alu_result
         .reg_write_src(reg_write_src),
         .alu_src(alu_src)
     );

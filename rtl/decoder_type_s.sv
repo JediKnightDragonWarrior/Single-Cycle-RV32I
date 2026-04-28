@@ -3,8 +3,7 @@
 module decoder_type_s (
 	input  logic [31:0] instr,
 	output logic [31:0] imm,
-	output logic [3:0]  store_op,
-	output logic [31:0] address
+	output logic [3:0]  store_op
 );
 
 	logic [2:0] funct3;

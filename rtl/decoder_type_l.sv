@@ -3,8 +3,8 @@
 module decoder_type_l (
 	input  logic [31:0] instr,
 	output logic [31:0] imm,
-	output logic [3:0]  load_op,
-	output logic [31:0] address);
+	output logic [3:0]  load_op
+);
 
 	logic [2:0] funct3;
 	assign funct3 = instr[14:12];

@@ -9,14 +9,14 @@ module upper_imm
     output logic [31:0]  upper_imm_result
 );
 
-    logic [31:0] shifted_imm;    
-    assign shifted_imm = (imm << 12);
+    // imm zaten decoder_type_u'dan {instr[31:12], 12'b0} olarak geliyor
+    // tekrar kaydırmaya gerek yok
 
     always_comb begin
     
         case (u_op)
-            U_LUI:      upper_imm_result = shifted_imm;
-            U_AUIPC:    upper_imm_result = pc + shifted_imm;
+            U_LUI:      upper_imm_result = imm;
+            U_AUIPC:    upper_imm_result = pc + imm;
             default:    upper_imm_result = 32'd0;
         endcase
 
