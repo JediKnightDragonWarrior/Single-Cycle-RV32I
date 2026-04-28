@@ -15,8 +15,6 @@ module decoder_type_s (
 		funct3   = instr[14:12];
 		store_op = STORE_INV;
 
-		address  = instr[19:15] + imm;
-
 		case (funct3)
 			3'b000: store_op = STORE_SB;
 			3'b001: store_op = STORE_SH;

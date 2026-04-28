@@ -13,7 +13,6 @@ module decoder_type_l (
 
 	always_comb begin
 		load_op = LOAD_INV;
-		address  = instr[19:15] + imm;
 
 		case (funct3)
 			3'd0:	 load_op = LOAD_LB;
