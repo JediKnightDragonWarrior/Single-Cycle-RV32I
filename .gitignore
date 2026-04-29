@@ -4,6 +4,8 @@
 *_sim
 *.vvp
 simv
+test/program.hex
+test/sim_results.txt
 
 .DS_Store
 *~

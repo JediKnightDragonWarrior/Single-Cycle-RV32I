@@ -7,11 +7,11 @@ module decoder_type_s (
 );
 
 	logic [2:0] funct3;
+	assign funct3 = instr[14:12];
 
 	assign imm = {{20{instr[31]}}, instr[31:25], instr[11:7]};
 
 	always_comb begin
-		funct3   = instr[14:12];
 		store_op = STORE_INV;
 
 		case (funct3)

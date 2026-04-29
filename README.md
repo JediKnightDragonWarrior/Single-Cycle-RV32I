@@ -8,13 +8,14 @@ This repository contains a simple, educational **Single-Cycle RISC-V (RV32I)** p
 
 ## 📜 Supported Instructions
 
-| Type       | Instructions Supported In Core          |
-| ---------- | --------------------------------------- |
-| **R-Type** | `add`, `sub`, `and`, `or`, `xor`, `slt` |
-| **I-Type** | `addi`, `lw`                            |
-| **S-Type** | `sw`                                    |
-| **B-Type** | `beq`                                   |
-| **J-Type** | `jal`                                   |
+| Type       | Instructions Supported In Core                                      |
+| ---------- | ------------------------------------------------------------------- |
+| **R-Type** | `add`, `sub`, `xor`, `or`, `and`, `sll`, `srl`, `sra`, `slt`, `sltu` |
+| **I-Type** | `addi`, `xori`, `ori`, `andi`, `slli`, `srli`, `srai`, `slti`, `sltiu`, `lb`, `lh`, `lw`, `lbu`, `lhu` |
+| **S-Type** | `sb`, `sh`, `sw`                                                    |
+| **B-Type** | `beq`, `bne`, `blt`, `bge`, `bltu`, `bgeu`                          |
+| **J-Type** | `jal`                                                               |
+| **U-Type** | `lui`, `auipc`                                                      |
 
 ## 🏗️ Architecture & Datapath
 
@@ -49,38 +50,54 @@ _Characteristics: Feedback loop engaged! ALU calculates subtraction, `Zero` flag
 ![Jump Datapath](docs/images/jal_datapath.png) <!-- Replace with your actual image path -->
 _Characteristics: Result MUX selects `PC+4` to save the return address in the selected register._
 
-## 📂 Module Hierarchy
+## 📂 Directory Structure
 
 ```text
-riscvsingle (Top Module)
-├── controller
-│   ├── maindec (Main Decoder - Opcode based)
-│   └── aludec  (ALU Decoder - funct3/funct7 based)
-└── datapath
-    ├── pc_reg     (Program Counter)
-    ├── signextend (Immediate Generator)
-    ├── regfile    (32x32-bit Register File)
-    └── alu        (Arithmetic Logic Unit)
+project_root
+├── rtl/                    # SystemVerilog source files
+│   ├── *.sv
+│
+├── tb/                     # SystemVerilog testbench files
+│   ├── overall_simulation.sv
+│
+├── test/                   
+│   ├── RV_Assembly_Code.s  # Assembly test program
+│   ├── program.hex         # assembled rv machine code (generated)
+│   └── sim_results.txt     # overall_simulation results (generated)
+│
+├── Makefile                # Build / simulation automation
+│
+├── simv                    # Compiled simulation executable (generated)
+├── wave.vcd                # Waveform dump file (generated)
+└── simulation_log.txt      # Simulation output log (generated)
 ```
 
-## 🚀 Running the Tests
+## Build & Run
 
-The project includes a comprehensive SystemVerilog testbench (`riscvsingle_tb.sv`) that verifies instruction execution, register updates, and branching logic.
+This project includes a `Makefile` to automate assembling the RISC-V program, compiling the SystemVerilog design, running the simulation, and viewing waveforms.
 
-**Prerequisites:** [Icarus Verilog](http://iverilog.icarus.com/) (`iverilog`).
+### Requirements
 
-To make testing easier, a **Makefile** is included. You can use the following commands:
+Install the following tools before compiling:
 
-```bash
-# Compile and run the simulation only
-make run
+- **make** – build automation tool  
+- **Icarus Verilog** (`iverilog`, `vvp`) – compile and run simulation  
+- **GTKWave** (`gtkwave`) – waveform viewer  
+- **RISC-V GNU Toolchain**  
+  - `riscv64-unknown-elf-as` – assembler  
+  - `riscv64-unknown-elf-objcopy` – binary conversion tool  
+- **hexdump** – generate `.hex` memory file  
 
-# Compile, run, and automatically open GTKWave to view waveforms
-make wave
 
-# Clean up generated files (simv, wave.vcd)
-make clean
-```
+### Make Targets
 
+| Command | Function |
+|--------|----------|
+| `make` | Assemble, compile, and run simulation |
+| `make compile` | Assemble code and compile RTL + testbench |
+| `make assemble` | Generate `program.hex` from assembly source |
+| `make run` | Run simulation |
+| `make wave` | Run simulation and open GTKWave |
+| `make clean` | Remove generated files |
 
 _🎓 Designed for hardware architecture studies and FPGA exploration._

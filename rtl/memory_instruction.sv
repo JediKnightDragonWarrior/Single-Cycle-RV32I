@@ -6,7 +6,7 @@ module memory_instruction
 
 logic [31:0] ram [0:63];
 
-initial $readmemh("test/rvtest.txt", ram);
+initial $readmemh("test/program.hex", ram);
 
 assign instruction = ram[address[7:2]]; // word aligned
 

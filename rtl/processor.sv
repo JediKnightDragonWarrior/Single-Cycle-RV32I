@@ -7,17 +7,15 @@ module processor (
     input  logic [31:0] data_read,
     
     output logic [31:0] pc,
-    output logic [31:0] address,
+    output logic [31:0] alu_result,
     output logic [31:0] data_write,
-    output logic [3:0]  load_op,
-    output logic [3:0]  store_op
+    output logic [3:0]  memory_op
 );
 
-    // Control signals from Main Decoder to Datapath
+    // wires that connects "control signals" from "Main Decoder" to "Datapath"
     logic [4:0]  rs1, rs2, rd;
     logic [31:0] imm;
     logic [3:0]  alu_op;
-    logic [3:0]  memory_op;
     logic [3:0]  branch_op;
     logic [3:0]  u_op;
     logic [3:0]  jump_op;
@@ -41,9 +39,6 @@ module processor (
     );
 
     // ========== Datapath ==========
-    logic [31:0] alu_result;
-    assign address = alu_result;
-
     datapath u_datapath (
         .clk(clk),
         .reset(reset),
@@ -60,25 +55,8 @@ module processor (
         .alu_src(alu_src),
         .pc(pc),
         .alu_result(alu_result),
-        .write_data(data_write),
-        .zero() // zero flag is internal to the processor logic for now
+        .rs2_val(data_write),
+        .zero()                         // zero flag is internal to the processor logic for now
     );
-
-    // Decode load_op and store_op from memory_op based on opcode
-    logic [6:0] opcode;
-    assign opcode = instruction[6:0];
-    
-    always_comb begin
-        if (opcode == OPCODE_LTYPE) begin
-            load_op  = memory_op;
-            store_op = STORE_INV; 
-        end else if (opcode == OPCODE_STYPE) begin
-            load_op  = LOAD_INV;
-            store_op = memory_op;
-        end else begin
-            load_op  = LOAD_INV;
-            store_op = STORE_INV;
-        end
-    end
 
 endmodule

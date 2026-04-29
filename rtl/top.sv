@@ -3,53 +3,57 @@
 module top (
     input  logic        clk,
     input  logic        reset,
-    output logic [31:0] WriteData,
-    output logic [31:0] DataAdr,
-    output logic [31:0] PC,
-    output logic        MemWrite
+
+    // these ports are just for testing purposes
+    output logic [31:0] Instruction_TEST,
+    output logic [31:0] DataRead_TEST,
+    output logic [31:0] Pc_TEST,
+    output logic [31:0] DataAdress_TEST,
+    output logic [31:0] DataWrite_TEST,
+    output logic [3:0]  MemoryOp_TEST
 );
 
+    // wires that connects processor to memories
     logic [31:0] instruction;
     logic [31:0] data_read;
-    logic [3:0]  load_op;
-    logic [3:0]  store_op;
+    logic [31:0] pc;
+    logic [31:0] data_adress;
+    logic [31:0] data_write;
     logic [3:0]  memory_op;
 
-    // MemWrite flag for the testbench
-    assign MemWrite = (store_op != STORE_INV);
-    
-    // Combine load and store operations into a single memory operation signal
-    assign memory_op = (load_op != LOAD_INV) ? load_op : store_op;
-
-    // ========== Processor Core ==========
     processor u_processor (
         .clk(clk),
         .reset(reset),
         .instruction(instruction),
         .data_read(data_read),
-        .pc(PC),
-        .address(DataAdr),
-        .data_write(WriteData),
-        .load_op(load_op),
-        .store_op(store_op)
+        .pc(pc),
+        .alu_result(data_adress),
+        .data_write(data_write),
+        .memory_op(memory_op)
     );
 
-    // ========== Instruction Memory ==========
     memory_instruction u_imem (
-        .address(PC),
+        .address(pc),
         .instruction(instruction)
     );
 
-    // ========== Data Memory ==========
     memory_data #(
         .ADDRESS_LENGTH(10),
         .BYTE_OFFSET(2)
     ) u_dmem (
         .clk(clk),
         .memory_op(memory_op),
-        .address(DataAdr),
-        .data_write(WriteData),
+        .address(data_adress),
+        .data_write(data_write),
         .data_read(data_read)
     );
+
+    // test ports , could be safely removed .
+    assign Instruction_TEST = instruction;
+    assign DataRead_TEST    = data_read;
+    assign Pc_TEST          = pc;
+    assign DataAdress_TEST  = data_adress;
+    assign DataWrite_TEST   = data_write;
+    assign MemoryOp_TEST    = memory_op;
 
 endmodule

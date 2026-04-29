@@ -7,10 +7,10 @@ module decoder_type_r (
 
 	logic [2:0] funct3;
 	logic [6:0] funct7;
+	assign funct3 = instr[14:12];
+	assign funct7 = instr[31:25];
 
 	always_comb begin
-		funct3 = instr[14:12];
-		funct7 = instr[31:25];
 
 		alu_op = ALU_INV;
 
