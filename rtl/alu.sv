@@ -7,6 +7,9 @@ module alu (
     output logic [31:0] alu_result    
 );
     
+    logic   [1:0]   mode;
+    logic   [31:0]  shifter_out;
+    
     always_comb begin
         case (alu_op)
             ALU_ADD:    alu_result = rs1 + rs2;                                       
@@ -22,10 +25,6 @@ module alu (
             default:    alu_result = 'x;                                                
         endcase
     end
-
-    logic   [1:0]   mode;
-    logic   [1:0]   shamt;
-    logic   [31:0]  shifter_out;
 
     always_comb begin
         case (alu_op)

@@ -6,6 +6,16 @@ ASM_SRC = test/RV_Assembly_Code.s
 HEX_FILE = test/program.hex
 LOG 	 = test/sim_results.txt
 
+# Toolchain detection
+ifneq ($(shell which riscv64-elf-as 2>/dev/null),)
+    PREFIX = riscv64-elf-
+else
+    PREFIX = riscv64-unknown-elf-
+endif
+
+AS      = $(PREFIX)as
+OBJCOPY = $(PREFIX)objcopy
+
 # Variables
 RTL  = $(wildcard $(RTL_DIR)/*.sv)
 TB   = $(TB_DIR)/overall_simulation.sv
@@ -36,8 +46,8 @@ $(OUT): $(RTL) $(TB)
 # Hexfile Rule
 # If hex doesn't exist or .s is newer, it triggers the RISC-V toolchain
 $(HEX_FILE): $(ASM_SRC)
-	riscv64-unknown-elf-as -march=rv32i -mabi=ilp32 -o tmp.o $(ASM_SRC)
-	riscv64-unknown-elf-objcopy -O binary --only-section=.text tmp.o tmp.bin
+	$(AS) -march=rv32i -mabi=ilp32 -o tmp.o $(ASM_SRC)
+	$(OBJCOPY) -O binary --only-section=.text tmp.o tmp.bin
 	hexdump -v -e '1/4 "%08x" "\n"' tmp.bin > $(HEX_FILE)
 	rm tmp.o tmp.bin
 

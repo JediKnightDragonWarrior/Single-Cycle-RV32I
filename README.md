@@ -76,17 +76,30 @@ project_root
 
 This project includes a `Makefile` to automate assembling the RISC-V program, compiling the SystemVerilog design, running the simulation, and viewing waveforms.
 
-### Requirements
+### Requirements & Installation
 
-Install the following tools before compiling:
+Before compiling and running the simulation, you need to install the following tools:
 
-- **make** – build automation tool  
-- **Icarus Verilog** (`iverilog`, `vvp`) – compile and run simulation  
-- **GTKWave** (`gtkwave`) – waveform viewer  
-- **RISC-V GNU Toolchain**  
-  - `riscv64-unknown-elf-as` – assembler  
-  - `riscv64-unknown-elf-objcopy` – binary conversion tool  
-- **hexdump** – generate `.hex` memory file  
+- **GNU Make** (`make`) – Build automation tool.
+- **Icarus Verilog** (`iverilog`, `vvp`) – Open-source SystemVerilog/Verilog compiler and simulator.
+- **GTKWave** (`gtkwave`) – Waveform viewer.
+- **RISC-V GNU Toolchain** (`as` and `objcopy`) – Assembler and binary copier to compile RISC-V assembly.
+- **Hexdump** – Utility to generate `.hex` file (comes by default with `util-linux` on Arch, or `bsdextrautils` on Ubuntu).
+
+#### Installation Commands
+
+Choose the command corresponding to your Linux distribution:
+
+##### 🏔️ Arch Linux / CachyOS
+```bash
+sudo pacman -Syu make riscv64-elf-binutils iverilog gtkwave
+```
+
+##### 🐧 Ubuntu / Debian
+```bash
+sudo apt update
+sudo apt install -y make binutils-riscv64-unknown-elf iverilog gtkwave bsdextrautils
+```  
 
 
 ### Make Targets
