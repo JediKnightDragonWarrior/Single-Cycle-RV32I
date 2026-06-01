@@ -6,6 +6,7 @@ module overall_simulation();
     logic        clk;
     logic        reset;
     logic [31:0] Instruction_TEST, DataRead_TEST, Pc_TEST, DataAdress_TEST, DataWrite_TEST;
+    logic [31:0] Pc_TEST_PREV;
     logic [3:0]  MemoryOp_TEST;
 
     // File handle variable
@@ -26,6 +27,7 @@ module overall_simulation();
     // Clock generation
     initial begin
         clk = 0;
+        Pc_TEST_PREV = 0;
         forever #5 clk = ~clk;
     end
 
@@ -34,7 +36,8 @@ module overall_simulation();
         if (f_log != 0) begin
             // Replaced \t with spaces and added fixed width (e.g., %8t, %4d, %08h, %10d)
             $fdisplay(f_log, "%8t  %4d  %08h  %10d  %10d  %4b", 
-                      $time, Pc_TEST, Instruction_TEST, DataAdress_TEST, DataWrite_TEST, MemoryOp_TEST);
+                      $time, Pc_TEST_PREV, Instruction_TEST, DataAdress_TEST, DataWrite_TEST, MemoryOp_TEST);
+            Pc_TEST_PREV = Pc_TEST;
         end
     end
 
